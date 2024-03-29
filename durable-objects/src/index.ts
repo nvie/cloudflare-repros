@@ -1,7 +1,7 @@
 export class Demo implements DurableObject {
   constructor(readonly state: DurableObjectState) {}
 
-  fetch(request: Request) {
+  fetch(req: Request) {
     const pair = new WebSocketPair();
     const client = pair[0];
     const server = pair[1];
@@ -11,10 +11,7 @@ export class Demo implements DurableObject {
     return new Response(null, { status: 101, webSocket: client });
   }
 
-  async webSocketMessage(
-    ws: WebSocket,
-    message: string | ArrayBuffer
-  ): Promise<void> {
+  async webSocketMessage(ws: WebSocket, msg: string | ArrayBuffer) {
     ws.send("hello back");
   }
 }

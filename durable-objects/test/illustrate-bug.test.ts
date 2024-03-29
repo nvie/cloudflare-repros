@@ -16,7 +16,7 @@ function waitForMessage(ws: WebSocket): Promise<MessageEvent> {
   });
 }
 
-it("demonstrates Cloudflare runtime issue", async () => {
+it("works", async () => {
   const response = await SELF.fetch("https://example.com", {
     headers: { Upgrade: "websocket" },
   });
