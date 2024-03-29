@@ -1,6 +1,4 @@
 export class Counter implements DurableObject {
-  count: number = 0;
-
   constructor(readonly state: DurableObjectState) {}
 
   fetch(request: Request) {
