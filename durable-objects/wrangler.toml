@@ -5,9 +5,9 @@ compatibility_flags = ["nodejs_compat"]
 
 [durable_objects]
 bindings = [
-	{ name = "COUNTER", class_name = "Counter" }
+	{ name = "DEMO", class_name = "Demo" }
 ]
 
 [[migrations]]
 tag = "v1"
-new_classes = ["Counter"]
+new_classes = ["Demo"]

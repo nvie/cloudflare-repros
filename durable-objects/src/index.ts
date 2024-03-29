@@ -1,4 +1,4 @@
-export class Counter implements DurableObject {
+export class Demo implements DurableObject {
   constructor(readonly state: DurableObjectState) {}
 
   fetch(request: Request) {
@@ -22,8 +22,8 @@ export class Counter implements DurableObject {
 export default <ExportedHandler<Env>>{
   fetch(request, env) {
     const { pathname } = new URL(request.url);
-    const id = env.COUNTER.idFromName(pathname);
-    const stub = env.COUNTER.get(id);
+    const id = env.DEMO.idFromName(pathname);
+    const stub = env.DEMO.get(id);
     return stub.fetch(request);
   },
 };
