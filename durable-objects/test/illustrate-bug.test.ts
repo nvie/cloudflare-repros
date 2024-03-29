@@ -1,4 +1,4 @@
-import { SELF } from "cloudflare:test";
+import { SELF, env, runInDurableObject } from "cloudflare:test";
 import { expect, it } from "vitest";
 
 function wait(ms: number) {
@@ -31,4 +31,18 @@ it("works", async () => {
   expect(event.data).toBe("hello back");
 
   ws.close();
+
+  // -----------------------------------------------------------
+  // Do the trick
+  // -----------------------------------------------------------
+  const { pathname } = new URL("https://example.com");
+  const id = env.DEMO.idFromName(pathname);
+  const stub = env.DEMO.get(id);
+  try {
+    await runInDurableObject(stub, (_, state) =>
+      state.blockConcurrencyWhile(() => {
+        throw new Error("Shutting down");
+      })
+    );
+  } catch {}
 });
