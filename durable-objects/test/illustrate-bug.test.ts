@@ -5,30 +5,28 @@ function wait(ms: number) {
   return new Promise((res) => setTimeout(res, ms));
 }
 
-function waitForMessage(ws: WebSocket): Promise<MessageEvent> {
-  return new Promise((resolve) => {
-    const onMessage = (event: MessageEvent) => {
-      resolve(event);
-      ws.removeEventListener("message", onMessage);
-    };
-
-    ws.addEventListener("message", onMessage);
-  });
-}
-
 it("works", async () => {
-  const response = await SELF.fetch("https://example.com", {
+  const resp1 = await SELF.fetch("https://example.com", {
     headers: { Upgrade: "websocket" },
   });
-  const ws = response.webSocket!;
-  expect(ws).toBeDefined();
+  const resp2 = await SELF.fetch("https://example.com", {
+    headers: { Upgrade: "websocket" },
+  });
 
-  ws.accept();
+  const ws1 = resp1.webSocket!;
+  const ws2 = resp2.webSocket!;
 
-  ws.send("hello");
+  ws1.accept();
+  ws2.accept();
 
-  const event = await waitForMessage(ws);
-  expect(event.data).toBe("hello back");
+  // Trigger hibernation
+  // await wait(9_500); // Works
+  await wait(10_000); // Crashes with a segfault :(
 
-  ws.close();
+  const resp3 = await SELF.fetch("https://example.com", {
+    headers: { Upgrade: "websocket" },
+  });
+
+  const ws3 = resp3.webSocket!;
+  ws3.accept();
 });
