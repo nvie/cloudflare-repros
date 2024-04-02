@@ -20,7 +20,7 @@ it("works", async () => {
   ws2.accept();
 
   // Trigger hibernation
-  // await wait(9_500); // Works
+  // await wait(9_500); // Works, but it hasn't hibernated
   await wait(10_000); // Crashes with a segfault :(
 
   const resp3 = await SELF.fetch("https://example.com", {
