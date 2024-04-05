@@ -1,5 +1,5 @@
 import { SELF } from "cloudflare:test";
-import { expect, it } from "vitest";
+import { it } from "vitest";
 
 function wait(ms: number) {
   return new Promise((res) => setTimeout(res, ms));
