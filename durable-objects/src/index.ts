@@ -13,20 +13,33 @@ function formatReadyState(ws: WebSocket) {
   }
 }
 
+function sleep(millis: number) {
+  return new Promise<void>((res) => setTimeout(() => res(), millis));
+}
+
 export class Demo implements DurableObject {
   constructor(readonly state: DurableObjectState) {
+    console.log("");
+    console.log("***********************************");
     console.log("Running constructor");
+    console.log("***********************************");
     this.printSockets();
 
     let index = 0;
     for (const ws of this.state.getWebSockets()) {
-      index++;
       try {
         ws.send("beep");
       } catch (err) {
         console.error(`Could not send a beep to socket#${index}: ${err}`);
       }
+      index++;
     }
+
+    this.state.blockConcurrencyWhile(async () => {
+      console.info("Almost ready...");
+      await sleep(1_000);
+      console.info("Constructor done running");
+    });
   }
 
   fetch(req: Request) {
@@ -47,11 +60,14 @@ export class Demo implements DurableObject {
   }
 
   printSockets() {
-    console.log("--------------------------------------------------");
+    const sockets = this.state.getWebSockets();
+    console.log(
+      `--- ${sockets.length} sockets -----------------------------------`
+    );
     let index = 0;
-    for (const ws of this.state.getWebSockets()) {
+    for (const ws of sockets) {
+      console.log(`Socket ${index}: ${formatReadyState(ws)}`);
       index++;
-      console.log(`- Socket#${index} state=${formatReadyState(ws)}`);
     }
   }
 
@@ -59,6 +75,16 @@ export class Demo implements DurableObject {
     console.log(`Server received ${msg}`);
 
     switch (msg) {
+      case "?": {
+        const sockets = this.state.getWebSockets();
+        ws.send(
+          `${sockets.length} sockets: ${sockets
+            .map(formatReadyState)
+            .join(", ")}`
+        );
+        return;
+      }
+
       case "now?":
         ws.send(`now=${Date.now()}`);
         return;
@@ -82,11 +108,15 @@ export class Demo implements DurableObject {
   }
 
   async webSocketClose(ws: WebSocket) {
-    console.log(`Got CLOSE event for socket ${ws}`);
+    console.log(
+      `Got CLOSE event for socket ${this.state.getWebSockets().indexOf(ws)}`
+    );
   }
 
   async webSocketError(ws: WebSocket) {
-    console.log(`Got ERROR event for socket ${ws}`);
+    console.log(
+      `Got ERROR event for socket ${this.state.getWebSockets().indexOf(ws)}`
+    );
   }
 }
 
