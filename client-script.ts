@@ -19,12 +19,6 @@ async function waitForHibernation() {
 let actualLastPong: number | null = null;
 let reportedLastPong: number | null = null;
 
-function rel(date: number | string | null): string {
-  return date === null
-    ? "null"
-    : new Date(Number(date)).getTime() - scriptStart + "ms since script start";
-}
-
 async function connect() {
   let resolve;
   const promise = new Promise((res) => {
