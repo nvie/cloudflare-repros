@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "check:type": "node tsc-all.mjs",
+    "dev": "wrangler dev durable-objects/src/index.ts",
     "test": "vitest --config vitest.workers.config.ts --reporter basic",
     "test:ci": "vitest run --config vitest.workers.config.ts --reporter basic"
   },
