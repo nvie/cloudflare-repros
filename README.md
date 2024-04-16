@@ -2,6 +2,8 @@
 
 This repo demonstrates a bug with `.getWebSocketAutoResponseTimestamp()` (or `.gWSART()`).
 
+📽️ [Video demo](https://share.cleanshot.com/nzVS2sMSHgz7YLcrTdXZ)
+
 ### It works locally...
 
 1. Check out this branch.
