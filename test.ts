@@ -43,7 +43,7 @@ async function connect() {
 
   socket.addEventListener("close", (ev) => {
     console.warn(`Got CLOSE event: code=${ev.code} reason=${ev.reason}`);
-    socket.close();
+    // socket.close();
   });
 
   socket.addEventListener("error", (err) => {
@@ -72,3 +72,4 @@ for await (const chunk of Bun.stdin.stream()) {
 }
 
 socket.close();
+console.log("bye");

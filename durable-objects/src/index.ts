@@ -37,7 +37,8 @@ export class Demo implements DurableObject {
 
     this.state.blockConcurrencyWhile(async () => {
       console.info("Almost ready...");
-      await sleep(1_000);
+      await sleep(5_000);
+      this.printSockets();
       console.info("Constructor done running");
     });
   }
@@ -103,13 +104,21 @@ export class Demo implements DurableObject {
       default:
         ws.send(`Unexpected command: ${msg}`);
         ws.close(4000, "Unexpected");
+        console.log(formatReadyState(ws));
         return;
     }
   }
 
-  async webSocketClose(ws: WebSocket) {
+  async webSocketClose(
+    ws: WebSocket,
+    code: number,
+    reason: string,
+    wasClean: boolean
+  ) {
     console.log(
-      `Got CLOSE event for socket ${this.state.getWebSockets().indexOf(ws)}`
+      `Got CLOSE event for socket ${this.state
+        .getWebSockets()
+        .indexOf(ws)}, code=${code}, reason=${reason}, wasClean=${wasClean}`
     );
   }
 
