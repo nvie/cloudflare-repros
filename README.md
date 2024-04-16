@@ -1,6 +1,6 @@
 # The replication
 
-This repo demonstrates a bug with `.getWebSocketAutoResponseTimestamp()` (or `.gWSART()`).
+This repo demonstrates [this bug](https://github.com/cloudflare/workerd/issues/2025) with `.getWebSocketAutoResponseTimestamp()` (or `.gWSART()`).
 
 📽️ [Video demo](https://share.cleanshot.com/nzVS2sMSHgz7YLcrTdXZ)
 
